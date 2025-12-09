@@ -1,0 +1,24 @@
+{
+  "name": "Portfolio",
+  "sections": [
+    {
+      "type": "hero",
+      "title": "My Portfolio",
+      "subtitle": "A showcase of my work.",
+      "image": ""
+    },
+    {
+      "type": "gallery",
+      "images": [
+        "gallery1.jpg",
+        "gallery2.jpg",
+        "gallery3.jpg"
+      ]
+    },
+    {
+      "type": "contact",
+      "title": "Contact Me",
+      "fields": ["name", "email", "message"]
+    }
+  ]
+}

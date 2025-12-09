@@ -1,0 +1,7 @@
+{
+  "type": "hero",
+  "title": "Big Title Goes Here",
+  "subtitle": "A short subtitle for your hero section.",
+  "button": { "text": "Click Me", "url": "#" },
+  "image": "hero-placeholder.jpg"
+}

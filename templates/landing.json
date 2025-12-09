@@ -1,0 +1,21 @@
+{
+  "name": "Landing Page",
+  "sections": [
+    {
+      "type": "hero",
+      "title": "Welcome to Your New Site!",
+      "subtitle": "Build something amazing.",
+      "button": { "text": "Get Started", "url": "#" },
+      "image": ""
+    },
+    {
+      "type": "features",
+      "features": [
+        { "icon": "icon-1.png", "title": "Fast", "text": "Lightning fast performance." },
+        { "icon": "icon-2.png", "title": "Easy", "text": "Simple to use editor." },
+        { "icon": "icon-3.png", "title": "Customizable", "text": "Make it your own." }
+      ]
+    },
+
+  ]
+}

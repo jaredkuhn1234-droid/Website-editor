@@ -1,0 +1,19 @@
+{
+  "id": "portfolio",
+  "name": "Portfolio Template",
+  "description": "Creative portfolio for freelancers and agencies.",
+  "category": "Portfolio",
+  "price": 0,
+  "thumbnail": "/assets/templates/portfolio-thumb.jpg",
+  "preview": "/assets/templates/portfolio-preview.jpg",
+  "features": [
+    "Project gallery",
+    "About section",
+    "Contact form"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "My Portfolio", "subtitle": "Showcase your work", "imageUrl": "/assets/templates/portfolio-preview.jpg" } },
+    { "type": "gallery", "data": { "images": ["/assets/templates/portfolio-preview.jpg"] } },
+    { "type": "footer", "data": { "text": "Email: me@portfolio.com" } }
+  ]
+}

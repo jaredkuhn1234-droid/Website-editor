@@ -1,0 +1,19 @@
+{
+  "id": "consulting",
+  "name": "Consulting Template",
+  "description": "Professional consulting site with services and contact form.",
+  "category": "Business",
+  "price": 20,
+  "thumbnail": "/assets/templates/consulting-thumb.jpg",
+  "preview": "/assets/templates/consulting-preview.jpg",
+  "features": [
+    "Service list",
+    "Contact form",
+    "Team section"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "Consulting Experts", "subtitle": "Grow your business", "imageUrl": "/assets/templates/consulting-preview.jpg" } },
+    { "type": "features", "data": { "title": "Our Services", "items": ["Strategy", "Operations"] } },
+    { "type": "footer", "data": { "text": "Email: info@consulting.com" } }
+  ]
+}

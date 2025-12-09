@@ -1,0 +1,19 @@
+{
+  "id": "restaurant",
+  "name": "Restaurant Template",
+  "description": "Elegant restaurant site with menu, gallery, and reservation sections.",
+  "category": "Food & Drink",
+  "price": 10,
+  "thumbnail": "/assets/templates/restaurant-thumb.jpg",
+  "preview": "/assets/templates/restaurant-preview.jpg",
+  "features": [
+    "Menu section",
+    "Gallery",
+    "Reservation form"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "Fine Dining", "subtitle": "Reserve your table today", "imageUrl": "/assets/templates/restaurant-preview.jpg" } },
+    { "type": "gallery", "data": { "images": ["/assets/templates/restaurant-preview.jpg"] } },
+    { "type": "footer", "data": { "text": "Visit us: 123 Main St" } }
+  ]
+}

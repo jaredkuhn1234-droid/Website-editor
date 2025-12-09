@@ -1,1 +1,88 @@
-// TODO: Build this section in the next step
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <a href="/landing-site/index.html" class="brand" title="Back to home">Builder</a>
+      <nav class="nav-links">
+        <a href="/app/dashboard.html" class="nav-link active">Dashboard</a>
+        <span id="user-email" class="user-email"></span>
+      </nav>
+      <button id="logout-btn" class="btn-logout" data-logout>Logout</button>
+    </div>
+  </header>
+
+  <!-- Main dashboard content -->
+  <main class="main-content">
+    <div class="container">
+      <div class="dashboard-header">
+        <h1>Your Sites</h1>
+        <button id="create-site-btn" class="btn-primary">Create New Site</button>
+      </div>
+
+      <!-- Container for site cards (populated dynamically) -->
+      <div id="sites-list" class="sites-list">
+        <!-- Additive: visually clear new project and template options -->
+        <div class="site-card new-site-card">
+          <div class="site-card-header">
+            <h3 class="site-card-title">+ New Project</h3>
+          </div>
+          <div class="site-card-thumbnail new-site-thumb">
+            <img src="../assets/images/site-thumb-default.png" alt="New site" />
+          </div>
+          <div class="site-card-actions">
+            <button class="btn-small btn-open" id="new-site-btn">Create</button>
+          </div>
+        </div>
+        <div class="site-card new-template-card">
+          <div class="site-card-header">
+            <h3 class="site-card-title">+ New From Template</h3>
+          </div>
+          <div class="site-card-thumbnail">
+            <img src="../assets/images/site-thumb-default.png" alt="Template site" />
+          </div>
+          <div class="site-card-actions">
+            <button class="btn-small btn-open" id="new-template-btn">Choose Template</button>
+          </div>
+        </div>
+        <!-- Site cards will be rendered here by dashboard.js -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for creating a new site -->
+  <div id="create-site-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create New Site</h2>
+        <button id="close-modal-btn" class="close-modal">&times;</button>
+      </div>
+      <form id="create-site-form">
+        <label for="site-name">Site Name</label>
+        <input type="text" id="site-name" name="siteName" placeholder="My Awesome Site" required>
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Create</button>
+        </div>
+      </form>
+      <div id="modal-message" class="modal-message"></div>
+    </div>
+  </div>
+
+  <script type="module" src="dashboard.js"></script>
+</main>
+
+<!-- Additive: Import dashboard-thumbnails.js for static thumbnails -->
+<script type="module" src="dashboard-thumbnails.js"></script>
+</body>
+</html>

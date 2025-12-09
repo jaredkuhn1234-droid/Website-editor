@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Template Thumbnail Generator</title>
+</head>
+<body style="background:#f7f8fa;font-family:Arial,sans-serif;">
+  <h1>Template Thumbnail Generator</h1>
+  <button onclick="generateAllThumbnails()" style="padding:12px 32px;font-size:1.2rem;">Generate Thumbnails</button>
+  <p>This will render and save thumbnails for all templates.</p>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    // List of template sources
+    const templates = [
+      'blank', 'business', 'landing', 'portfolio',
+      'barber', 'consulting', 'fitness', 'portfolio', 'real-estate', 'restaurant'
+    ];
+    const templateSources = {
+      blank: '/templates/blank.json',
+      business: '/templates/business.json',
+      landing: '/templates/landing.json',
+      portfolio: '/templates/portfolio.json',
+      barber: '/templates-data/barber.json',
+      consulting: '/templates-data/consulting.json',
+      fitness: '/templates-data/fitness.json',
+      real-estate: '/templates-data/real-estate.json',
+      restaurant: '/templates-data/restaurant.json'
+    };
+
+    async function fetchTemplate(id) {
+      const res = await fetch(templateSources[id]);
+      return res.json();
+    }
+
+    function renderSection(section, idx) {
+      // Minimal rendering for thumbnail purposes
+      if (section.type === 'hero' || section.type === 'hero') {
+        const data = section.data || section;
+        return `<section style='padding:32px;text-align:center;background:#f5f5f5;border-radius:8px;margin-bottom:8px;'>`
+          + `<h2>${data.title || ''}</h2><p>${data.subtitle || ''}</p>`
+          + (data.imageUrl ? `<img src='${data.imageUrl}' style='max-width:100px;'/>` : '')
+          + `</section>`;
+      }
+      if (section.type === 'features') {
+        const data = section.data || section;
+        return `<section style='padding:16px;background:#fff;border-radius:8px;margin-bottom:8px;'>`
+          + `<h3>${data.title || 'Features'}</h3>`
+          + `<ul>${(data.items || (data.features || [])).map(f => `<li>${f.title || f}</li>`).join('')}</ul>`
+          + `</section>`;
+      }
+      if (section.type === 'gallery') {
+        const data = section.data || section;
+        return `<section style='padding:16px;background:#eee;border-radius:8px;margin-bottom:8px;'>`
+          + `<div>${(data.images || []).map(img => `<img src='${img}' style='max-width:60px;margin:2px;'/>`).join('')}</div>`
+          + `</section>`;
+      }
+      if (section.type === 'footer') {
+        const data = section.data || section;
+        return `<footer style='padding:8px;background:#222;color:#fff;border-radius:8px;'>${data.text || ''}</footer>`;
+      }
+      if (section.type === 'testimonials') {
+        return `<section style='padding:16px;background:#fafafa;border-radius:8px;margin-bottom:8px;'><h3>Testimonials</h3></section>`;
+      }
+      if (section.type === 'contact') {
+        return `<section style='padding:16px;background:#fafafa;border-radius:8px;margin-bottom:8px;'><h3>Contact</h3></section>`;
+      }
+      return '';
+    }
+
+    window.generateAllThumbnails = async function() {
+      for (const id of templates) {
+        const template = await fetchTemplate(id);
+        let html = '';
+        const sections = template.sections || (template.sections ? template.sections : []);
+        sections.forEach((section, idx) => {
+          html += renderSection(section, idx);
+        });
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        container.style.width = '320px';
+        container.style.height = '180px';
+        container.style.background = '#fff';
+        document.body.appendChild(container);
+        await new Promise(resolve => setTimeout(resolve, 300)); // Let images load
+        html2canvas(container).then(canvas => {
+          const base64 = canvas.toDataURL('image/png');
+          fetch('/api/thumbnail-save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ templateId: id, base64 })
+          }).then(res => {
+            if (res.ok) {
+              container.style.border = '2px solid #4CAF50';
+            } else {
+              container.style.border = '2px solid #f44336';
+            }
+            setTimeout(() => container.remove(), 1000);
+          });
+        });
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for save
+      }
+      alert('All thumbnails generated!');
+    }
+  </script>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+    // List of template sources
+    const templates = [
+      'blank', 'business', 'landing', 'portfolio',
+      'barber', 'consulting', 'fitness', 'portfolio', 'real-estate', 'restaurant'
+    ];
+    const templateSources = {
+      blank: '/templates/blank.json',
+      business: '/templates/business.json',
+      landing: '/templates/landing.json',
+      portfolio: '/templates/portfolio.json',
+      barber: '/templates-data/barber.json',
+      consulting: '/templates-data/consulting.json',
+      fitness: '/templates-data/fitness.json',
+      real-estate: '/templates-data/real-estate.json',
+      restaurant: '/templates-data/restaurant.json'
+    };
+
+    async function fetchTemplate(id) {
+      const res = await fetch(templateSources[id]);
+      return res.json();
+    }
+
+    function renderSection(section, idx) {
+      // Minimal rendering for thumbnail purposes
+      if (section.type === 'hero' || section.type === 'hero') {
+        const data = section.data || section;
+        return `<section style='padding:32px;text-align:center;background:#f5f5f5;border-radius:8px;margin-bottom:8px;'>`
+          + `<h2>${data.title || ''}</h2><p>${data.subtitle || ''}</p>`
+          + (data.imageUrl ? `<img src='${data.imageUrl}' style='max-width:100px;'/>` : '')
+          + `</section>`;
+      }
+      if (section.type === 'features') {
+        const data = section.data || section;
+        return `<section style='padding:16px;background:#fff;border-radius:8px;margin-bottom:8px;'>`
+          + `<h3>${data.title || 'Features'}</h3>`
+          + `<ul>${(data.items || (data.features || [])).map(f => `<li>${f.title || f}</li>`).join('')}</ul>`
+          + `</section>`;
+      }
+      if (section.type === 'gallery') {
+        const data = section.data || section;
+        return `<section style='padding:16px;background:#eee;border-radius:8px;margin-bottom:8px;'>`
+          + `<div>${(data.images || []).map(img => `<img src='${img}' style='max-width:60px;margin:2px;'/>`).join('')}</div>`
+          + `</section>`;
+      }
+      if (section.type === 'footer') {
+        const data = section.data || section;
+        return `<footer style='padding:8px;background:#222;color:#fff;border-radius:8px;'>${data.text || ''}</footer>`;
+      }
+      if (section.type === 'testimonials') {
+        return `<section style='padding:16px;background:#fafafa;border-radius:8px;margin-bottom:8px;'><h3>Testimonials</h3></section>`;
+      }
+      if (section.type === 'contact') {
+        return `<section style='padding:16px;background:#fafafa;border-radius:8px;margin-bottom:8px;'><h3>Contact</h3></section>`;
+      }
+      return '';
+    }
+
+    window.generateAllThumbnails = async function() {
+      for (const id of templates) {
+        const template = await fetchTemplate(id);
+        let html = '';
+        const sections = template.sections || (template.sections ? template.sections : []);
+        sections.forEach((section, idx) => {
+          html += renderSection(section, idx);
+        });
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        container.style.width = '320px';
+        container.style.height = '180px';
+        container.style.background = '#fff';
+        document.body.appendChild(container);
+        await new Promise(resolve => setTimeout(resolve, 300)); // Let images load
+        html2canvas(container).then(canvas => {
+          const base64 = canvas.toDataURL('image/png');
+          fetch('/api/thumbnail-save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ templateId: id, base64 })
+          }).then(res => {
+            if (res.ok) {
+              container.style.border = '2px solid #4CAF50';
+            } else {
+              container.style.border = '2px solid #f44336';
+            }
+            setTimeout(() => container.remove(), 1000);
+          });
+        });
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for save
+      }
+      alert('All thumbnails generated!');
+    }
+</script>
+</body>
+</html>

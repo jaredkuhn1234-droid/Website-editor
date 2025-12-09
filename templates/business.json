@@ -1,0 +1,13 @@
+{
+  "name": "Business Site",
+  "sections": [
+
+    {
+      "type": "testimonials",
+      "testimonials": [
+        { "name": "Jane Doe", "text": "Amazing service!" },
+        { "name": "John Smith", "text": "Highly recommend." }
+      ]
+    }
+  ]
+}

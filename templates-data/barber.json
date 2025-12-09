@@ -1,0 +1,19 @@
+{
+  "id": "barber",
+  "name": "Barber Shop Template",
+  "description": "A clean barbershop website template with hero, services, and contact sections.",
+  "category": "Business",
+  "price": 0,
+  "thumbnail": "/assets/templates/barber-thumb.jpg",
+  "preview": "/assets/templates/barber-preview.jpg",
+  "features": [
+    "Responsive layout",
+    "Hero + services + pricing",
+    "Drag-and-drop compatible"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "Barber Shop", "subtitle": "Classic cuts & shaves", "imageUrl": "/assets/templates/barber-preview.jpg" } },
+    { "type": "features", "data": { "title": "Our Services", "items": ["Haircut", "Shave", "Beard Trim"] } },
+    { "type": "footer", "data": { "text": "Contact us: 555-1234" } }
+  ]
+}

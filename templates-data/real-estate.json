@@ -1,0 +1,19 @@
+{
+  "id": "real-estate",
+  "name": "Real Estate Template",
+  "description": "Modern real estate template with listings, agent info, and contact form.",
+  "category": "Business",
+  "price": 0,
+  "thumbnail": "/assets/templates/real-estate-thumb.jpg",
+  "preview": "/assets/templates/real-estate-preview.jpg",
+  "features": [
+    "Property listings",
+    "Agent profile",
+    "Contact form"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "Find Your Home", "subtitle": "Browse listings now", "imageUrl": "/assets/templates/real-estate-preview.jpg" } },
+    { "type": "features", "data": { "title": "Featured Listings", "items": ["2BR Apartment", "3BR House"] } },
+    { "type": "footer", "data": { "text": "Contact: agent@homes.com" } }
+  ]
+}

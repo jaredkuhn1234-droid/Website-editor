@@ -1,1 +1,345 @@
-// TODO: Build this section in the next step
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor | Builder</title>
+  <script>
+    // Set API base for publish functionality
+    window.PUBLISH_API_BASE = 'http://localhost:4003';
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="editor.css">
+  <!-- Supabase CDN and client initialization -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    window.supabase = supabase.createClient(
+      'https://vpvpdlsfjmydhvyafmjo.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwdnBkbHNmam15ZGh2eWFmbWpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzk5NDIsImV4cCI6MjA4MDY1NTk0Mn0.bTSQ1cyYIN2FTKQRyjskhheXbHJxknV9IDVZoqB_fJ0'
+    );
+  </script>
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <header class="editor-navbar">
+    <div class="navbar-content">
+      <a href="/app/dashboard.html" class="nav-back">← Back to Dashboard</a>
+      <div class="site-name" id="site-name"></div>
+      <div class="navbar-actions">
+        <a id="published-url" class="published-link" href="#" target="_blank" rel="noopener" style="display: none;">View Live</a>
+        <button id="preview-btn" class="btn btn-secondary">Preview</button>
+        <button id="editor-download" class="btn btn-secondary">Download ZIP</button>
+        <button id="editor-publish" class="btn btn-secondary">Publish</button>
+        <button id="save-btn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Publish Status Area -->
+  <div id="publishStatus" style="display:none; background:#4CAF50; color:white; padding:12px 20px; text-align:center;">
+    <p id="publishMessage" style="margin:0; font-weight:500;"></p>
+    <a id="publishedLink" href="#" target="_blank" style="color:white; text-decoration:underline; margin-left:10px;"></a>
+  </div>
+
+  <!-- Main editor layout -->
+  <div class="editor-container">
+    <!-- Left sidebar -->
+    <aside class="editor-sidebar">
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" data-tab="sections">Sections</button>
+        <button class="tab-btn" data-tab="pages">Pages</button>
+        <button class="tab-btn" data-tab="styles">Styles</button>
+        <button class="tab-btn" data-tab="seo">SEO</button>
+        <button class="tab-btn" data-tab="settings">Settings</button>
+      </div>
+
+      <!-- Tab content: Sections -->
+      <div class="tab-content active" id="sections-tab">
+        <div class="tab-header">
+          <h3>Sections</h3>
+        </div>
+        <div class="section-picker">
+          <button class="section-type-btn" data-section-type="hero">
+            <span class="icon">📄</span>
+            <span class="label">Hero</span>
+          </button>
+          <button class="section-type-btn" data-section-type="text">
+            <span class="icon">📝</span>
+            <span class="label">Text Block</span>
+          </button>
+          <button class="section-type-btn" data-section-type="image">
+            <span class="icon">🖼️</span>
+            <span class="label">Image Block</span>
+          </button>
+          <button class="section-type-btn" data-section-type="features">
+            <span class="icon">⭐</span>
+            <span class="label">Features Row</span>
+          </button>
+          <button class="section-type-btn" data-section-type="pricing">
+            <span class="icon">💰</span>
+            <span class="label">Pricing Table</span>
+          </button>
+          <button class="section-type-btn" data-section-type="contact">
+            <span class="icon">✉️</span>
+            <span class="label">Contact Section</span>
+          </button>
+        </div>
+        
+        <div class="section-divider" style="margin: 20px 0; border-top: 1px solid #e5e7eb;"></div>
+        
+        <div class="tab-header" style="margin-top: 20px;">
+          <h3 style="font-size: 14px;">Templates</h3>
+        </div>
+        <div class="template-picker">
+          <button class="template-btn" data-template="landing" style="padding: 12px; margin: 5px 0; width: 100%; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">🚀 Landing Page</div>
+            <div style="font-size: 12px; color: #6b7280;">Hero + Features + Pricing</div>
+          </button>
+          <button class="template-btn" data-template="portfolio" style="padding: 12px; margin: 5px 0; width: 100%; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">🎨 Portfolio</div>
+            <div style="font-size: 12px; color: #6b7280;">Hero + Images + Contact</div>
+          </button>
+          <button class="template-btn" data-template="business" style="padding: 12px; margin: 5px 0; width: 100%; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; text-align: left; font-size: 14px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">💼 Business</div>
+            <div style="font-size: 12px; color: #6b7280;">Hero + Features + Contact</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab content: Pages -->
+      <div class="tab-content" id="pages-tab">
+        <div class="tab-header">
+          <h3>Pages</h3>
+          <button class="btn-add" id="add-page-btn" title="Add page">+</button>
+        </div>
+        <ul class="pages-list" id="pages-list"></ul>
+      </div>
+
+      <!-- Tab content: Styles -->
+      <div class="tab-content" id="styles-tab">
+        <div class="styles-section">
+          <h4 class="styles-section-title editor-style-title">Quick Themes</h4>
+          <div class="theme-presets" id="theme-presets">
+            <button class="theme-card" data-theme="minimal">
+              <div class="theme-colors">
+                <span class="theme-color" style="background: #000000"></span>
+                <span class="theme-color" style="background: #ffffff"></span>
+              </div>
+              <div class="theme-info">
+                <span class="theme-name">Minimal</span>
+                <span class="theme-desc">Clean & simple</span>
+              </div>
+            </button>
+            <button class="theme-card" data-theme="modern">
+              <div class="theme-colors">
+                <span class="theme-color" style="background: #4A90E2"></span>
+                <span class="theme-color" style="background: #f6f7fb"></span>
+              </div>
+              <div class="theme-info">
+                <span class="theme-name">Modern</span>
+                <span class="theme-desc">Fresh & vibrant</span>
+              </div>
+            </button>
+            <button class="theme-card" data-theme="bold">
+              <div class="theme-colors">
+                <span class="theme-color" style="background: #ff3b3b"></span>
+                <span class="theme-color" style="background: #ffffff"></span>
+              </div>
+              <div class="theme-info">
+                <span class="theme-name">Bold</span>
+                <span class="theme-desc">Eye-catching</span>
+              </div>
+            </button>
+            <button class="theme-card" data-theme="elegant">
+              <div class="theme-colors">
+                <span class="theme-color" style="background: #6c5ce7"></span>
+                <span class="theme-color" style="background: #fdfaf5"></span>
+              </div>
+              <div class="theme-info">
+                <span class="theme-name">Elegant</span>
+                <span class="theme-desc">Refined luxury</span>
+              </div>
+            </button>
+            <button class="theme-card" data-theme="dark">
+              <div class="theme-colors">
+                <span class="theme-color" style="background: #ffffff"></span>
+                <span class="theme-color" style="background: #000000"></span>
+              </div>
+              <div class="theme-info">
+                <span class="theme-name">Dark</span>
+                <span class="theme-desc">Sleek & modern</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="styles-section">
+          <h4 class="styles-section-title">Colors</h4>
+          <div class="color-control-group">
+            <label for="primary-color-input">Primary Color</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="primary-color-input" />
+              <span class="color-hex" id="primary-color-hex">#4A90E2</span>
+            </div>
+          </div>
+          <div class="color-control-group">
+            <label for="accent-color-input">Accent Color</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="accent-color-input" />
+              <span class="color-hex" id="accent-color-hex">#2563eb</span>
+            </div>
+          </div>
+          <div class="color-control-group">
+            <label for="background-color-input">Background</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="background-color-input" />
+              <span class="color-hex" id="background-color-hex">#ffffff</span>
+            </div>
+          </div>
+          <div class="color-control-group">
+            <label for="text-color-input">Text Color</label>
+            <div class="color-input-wrapper">
+              <input type="color" id="text-color-input" />
+              <span class="color-hex" id="text-color-hex">#0b1224</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="styles-section">
+          <h4 class="styles-section-title">Typography</h4>
+          <div class="font-control-group">
+            <label for="heading-font-select">Heading Font</label>
+            <select id="heading-font-select" class="font-select">
+              <option value="Inter">Inter</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Lato">Lato</option>
+            </select>
+            <div class="font-preview" id="heading-font-preview" style="font-family: Inter, sans-serif; font-weight: 700; font-size: 18px;">Heading Sample</div>
+          </div>
+          <div class="font-control-group">
+            <label for="body-font-select">Body Font</label>
+            <select id="body-font-select" class="font-select">
+              <option value="Inter">Inter</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Lato">Lato</option>
+            </select>
+            <div class="font-preview" id="body-font-preview" style="font-family: Inter, sans-serif; font-size: 14px;">This is body text sample</div>
+          </div>
+        </div>
+
+        <div class="styles-section">
+          <h4 class="styles-section-title">Spacing & Layout</h4>
+          <div class="spacing-control-group">
+            <label for="border-radius-input">Border Radius <span class="value-display" id="border-radius-value">8px</span></label>
+            <input type="range" id="border-radius-input" min="0" max="24" value="8" step="1" />
+          </div>
+          <div class="spacing-control-group">
+            <label for="section-spacing-input">Section Spacing <span class="value-display" id="section-spacing-value">16px</span></label>
+            <input type="range" id="section-spacing-input" min="8" max="48" value="16" step="4" />
+          </div>
+        </div>
+
+        <button class="btn-reset-styles" id="reset-styles-btn">Reset to Defaults</button>
+      </div>
+
+      <!-- Tab content: SEO -->
+      <div class="tab-content" id="seo-tab">
+        <div class="tab-header">
+          <h3>SEO Settings</h3>
+        </div>
+        <div class="settings-group">
+          <label>Page Title (SEO)</label>
+          <input type="text" id="seo-title-input" placeholder="Optimized title for search engines" maxlength="60">
+          <small style="color: #6b7280; font-size: 12px;">60 characters max</small>
+        </div>
+        <div class="settings-group">
+          <label>Meta Description</label>
+          <textarea id="seo-description-input" placeholder="Brief description for search results" maxlength="160" rows="3"></textarea>
+          <small style="color: #6b7280; font-size: 12px;">160 characters max</small>
+        </div>
+        <div class="settings-group">
+          <label>Keywords</label>
+          <input type="text" id="seo-keywords-input" placeholder="keyword1, keyword2, keyword3">
+          <small style="color: #6b7280; font-size: 12px;">Comma separated</small>
+        </div>
+        <div class="settings-group">
+          <label>Favicon URL</label>
+          <input type="text" id="seo-favicon-input" placeholder="https://example.com/favicon.ico">
+        </div>
+        <div class="settings-group">
+          <label>Google Analytics ID</label>
+          <input type="text" id="seo-analytics-input" placeholder="G-XXXXXXXXXX or UA-XXXXXXXXX">
+        </div>
+        <button class="btn btn-primary" id="save-seo-btn" style="width: 100%; margin-top: 10px;">Save SEO Settings</button>
+      </div>
+
+      <!-- Tab content: Settings -->
+      <div class="tab-content" id="settings-tab">
+        <div class="settings-group">
+          <label>Site Title</label>
+          <input type="text" id="site-title-input" placeholder="Enter site title">
+        </div>
+        <div class="settings-group">
+          <label>Custom Domain</label>
+          <input type="text" id="custom-domain-input" placeholder="yourdomain.com">
+          <small style="color: #6b7280; font-size: 12px;">Point your domain's DNS to Netlify</small>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main canvas area -->
+    <main class="editor-canvas">
+      <!-- Canvas Toolbar -->
+      <div class="canvas-toolbar" style="display: flex; justify-content: center; align-items: center; gap: 12px; padding: 12px; background: white; border-bottom: 1px solid #e5e7eb;">
+        <div class="history-controls" style="display: flex; gap: 8px;">
+          <button id="undo-btn" class="btn btn-secondary" style="padding: 8px 16px;" title="Undo (Ctrl+Z)" disabled>
+            ↶ Undo
+          </button>
+          <button id="redo-btn" class="btn btn-secondary" style="padding: 8px 16px;" title="Redo (Ctrl+Y)" disabled>
+            ↷ Redo
+          </button>
+        </div>
+        <div style="width: 1px; height: 24px; background: #e5e7eb;"></div>
+        <div class="viewport-controls" style="display: flex; gap: 8px;">
+          <button id="viewport-desktop" class="viewport-btn active" data-viewport="desktop" style="padding: 8px 16px; border: 2px solid #667eea; background: #667eea; color: white; border-radius: 6px; cursor: pointer;" title="Desktop">
+            🖥️ Desktop
+          </button>
+          <button id="viewport-tablet" class="viewport-btn" data-viewport="tablet" style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #1f2937; border-radius: 6px; cursor: pointer;" title="Tablet">
+            📱 Tablet
+          </button>
+          <button id="viewport-mobile" class="viewport-btn" data-viewport="mobile" style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #1f2937; border-radius: 6px; cursor: pointer;" title="Mobile">
+            📱 Mobile
+          </button>
+        </div>
+      </div>
+      <div class="canvas-content" id="canvas-content" data-viewport="desktop">
+        <!-- Website preview will render here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Save confirmation message -->
+  <div id="save-message" class="save-message"></div>
+  <div id="autosave-indicator" style="position:fixed;bottom:24px;right:24px;background:#4CAF50;color:white;padding:8px 18px;border-radius:8px;font-weight:500;z-index:1000;display:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Saved</div>
+  <!-- Additive: Section controls for move up/down/delete -->
+  <template id="section-controls-template">
+    <div class="section-controls" style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:8px;">
+      <button class="btn btn-secondary btn-move-up" title="Move Up">↑</button>
+      <button class="btn btn-secondary btn-move-down" title="Move Down">↓</button>
+      <button class="btn btn-danger btn-delete-section" title="Delete">✕</button>
+    </div>
+  </template>
+
+  <!-- JSZip for client-side export -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip"></script>
+  <script src="editor.js"></script>
+</body>
+</html>

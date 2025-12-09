@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template Details</title>
+  <meta name="description" content="Template details for your website builder.">
+  <link rel="stylesheet" href="/editor/editor.css">
+  <script src="/js/template-thumbnails.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="/editor/editor.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f8fa; margin: 0; }
+    .container { max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    .preview { width: 100%; max-width: 640px; height: 320px; object-fit: cover; border-radius: 10px; margin-bottom: 24px; display: block; }
+    .template-preview-mini {
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      transform: scale(0.5);
+      transform-origin: top left;
+      border-radius: 12px;
+      background: white;
+      margin-bottom: 24px;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    h1 { font-size: 2rem; margin-bottom: 12px; }
+    .desc { color: #555; margin-bottom: 18px; }
+    .badge { padding: 4px 12px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; margin-bottom: 10px; display: inline-block; }
+    .free { background: #e0ffe0; color: #1a7f37; }
+    .paid { background: #ffe0e0; color: #b91c1c; }
+    .features { margin-bottom: 18px; }
+    .features li { margin-bottom: 6px; }
+    .actions { display: flex; gap: 12px; margin-top: 10px; }
+    button, a.button { padding: 8px 18px; border-radius: 6px; border: none; background: #2563eb; color: #fff; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    button:disabled, .button.disabled { background: #bbb; cursor: not-allowed; }
+    @media (max-width: 600px) { .container { margin: 16px auto; } .preview { height: 180px; } }
+  </style>
+</head>
+<body>
+  <div class="container" id="templateContainer"></div>
+  <script>
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) { document.getElementById('templateContainer').innerHTML = '<p>Template not found.</p>'; }
+    else {
+      fetch(`/templates-data/${id}.json`).then(r => r.json()).then(async json => {
+        document.title = json.name + ' | Template Details';
+        document.querySelector('meta[name=description]').setAttribute('content', json.description);
+        // Set SEO/OG tags for static thumbnail
+        const thumbPath = `/assets/template-thumbnails/${json.id}.png`;
+        let thumbExists = false;
+        try { thumbExists = await window.checkIfThumbnailExists(json.id); } catch {}
+        const ogTags = [
+          ['og:title', json.name],
+          ['og:description', json.description],
+          ['og:image', thumbExists ? thumbPath : json.preview],
+          ['twitter:image', thumbExists ? thumbPath : json.preview]
+        ];
+        ogTags.forEach(([p, v]) => {
+          let tag = document.querySelector(`meta[property='${p}']`) || document.querySelector(`meta[name='${p}']`);
+          if (!tag) { tag = document.createElement('meta'); tag.setAttribute(p.startsWith('og:') ? 'property' : 'name', p); document.head.appendChild(tag); }
+          tag.setAttribute('content', v);
+        });
+        let previewHtml = '';
+        if (thumbExists) {
+          previewHtml = `<img id="templatePreviewImg" src="${thumbPath}" alt="${json.name} preview" class="preview" loading="lazy">`;
+        } else {
+          // Live preview fallback and auto-generate default thumbnail
+          previewHtml = `<div class="template-preview-mini" id="mini-preview-${json.id}"></div>`;
+          setTimeout(() => {
+            const container = document.getElementById(`mini-preview-${json.id}`);
+            if (container) {
+              let html = '';
+              if (Array.isArray(json.sections)) {
+                json.sections.forEach((section, idx) => {
+                  html += window.renderSection ? window.renderSection(section, idx) : '';
+                });
+              }
+              container.innerHTML = html;
+              window.generateThumbnail(json.id, container).then(() => {
+                // Optionally, reload the page to show the new thumbnail
+                // location.reload();
+              });
+            }
+          }, 0);
+        }
+        document.getElementById('templateContainer').innerHTML = `
+          ${previewHtml}
+          <h1>${json.name}</h1>
+          <div class="desc">${json.description}</div>
+          <div class="badge ${json.price > 0 ? 'paid' : 'free'}">${json.price > 0 ? 'Premium' : 'Free'}</div>
+          <ul class="features">${json.features.map(f => `<li>${f}</li>`).join('')}</ul>
+          <div class="actions">
+            <button onclick="useTemplate('${json.id}')" ${json.price > 0 ? 'disabled' : ''}>Use Template</button>
+            ${json.price > 0 ? `<a class="button" href="/checkout.html?id=${json.id}">Unlock Template</a>` : ''}
+          </div>
+        `;
+        if (!thumbExists) {
+          setTimeout(() => {
+            const container = document.getElementById(`mini-preview-${json.id}`);
+            if (!container) return;
+            let html = '';
+            if (Array.isArray(json.sections)) {
+              json.sections.forEach((section, idx) => {
+                html += window.renderSection ? window.renderSection(section, idx) : '';
+              });
+            }
+            container.innerHTML = html;
+          }, 0);
+        }
+      });
+    }
+    function useTemplate(id) {
+      if (window.loadTemplate) { window.loadTemplate(id); }
+      else { alert('Editor integration not loaded.'); }
+    }
+  </script>
+</body>
+</html>

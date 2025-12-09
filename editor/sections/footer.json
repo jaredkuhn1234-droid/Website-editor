@@ -1,0 +1,9 @@
+{
+  "type": "footer",
+  "links": [
+    { "text": "Home", "url": "/" },
+    { "text": "About", "url": "/about" },
+    { "text": "Contact", "url": "/contact" }
+  ],
+  "copyright": "© 2025 Your Company"
+}

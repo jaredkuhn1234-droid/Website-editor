@@ -1,0 +1,9 @@
+{
+  "type": "features",
+  "features": [
+    { "icon": "icon-1.png", "title": "Feature One", "text": "Description for feature one." },
+    { "icon": "icon-2.png", "title": "Feature Two", "text": "Description for feature two." },
+    { "icon": "icon-3.png", "title": "Feature Three", "text": "Description for feature three." },
+    { "icon": "icon-4.png", "title": "Feature Four", "text": "Description for feature four." }
+  ]
+}

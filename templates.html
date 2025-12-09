@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template Marketplace</title>
+  <meta name="description" content="Browse free and premium website templates for your site builder.">
+  <link rel="stylesheet" href="/editor/editor.css">
+  <link rel="stylesheet" href="/app/dashboard.css">
+  <script src="/js/template-thumbnails.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="/editor/editor.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f8fa; margin: 0; }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 16px; }
+    h1 { font-size: 2.5rem; margin-bottom: 24px; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 24px; display: flex; flex-direction: column; align-items: center; transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+    .thumb-image { width: 100%; max-width: 320px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; display: block; }
+    .template-preview-mini {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      transform: scale(0.25);
+      transform-origin: top left;
+      border-radius: 12px;
+      background: white;
+      margin-bottom: 16px;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .name { font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
+    .desc { color: #555; margin-bottom: 12px; text-align: center; }
+    .badge { padding: 4px 12px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; margin-bottom: 10px; }
+    .free { background: #e0ffe0; color: #1a7f37; }
+    .paid { background: #ffe0e0; color: #b91c1c; }
+    .actions { display: flex; gap: 12px; margin-top: 10px; }
+    button, a.button { padding: 8px 18px; border-radius: 6px; border: none; background: #2563eb; color: #fff; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    button:disabled, .button.disabled { background: #bbb; cursor: not-allowed; }
+    @media (max-width: 600px) { .container { margin: 16px auto; } .grid { gap: 16px; } .card { padding: 12px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Template Marketplace</h1>
+    <div class="grid" id="templatesGrid"></div>
+  </div>
+  <script>
+    async function fetchTemplates() {
+      const files = ["barber.json","restaurant.json","real-estate.json","portfolio.json","fitness.json","consulting.json"];
+      const grid = document.getElementById('templatesGrid');
+      for (const file of files) {
+        const json = await fetch(`/templates-data/${file}`).then(r => r.json());
+        const card = document.createElement('div');
+        card.className = 'card';
+        // Hybrid preview logic
+        const thumbPath = `/assets/template-thumbnails/${json.id}.png`;
+        let thumbExists = false;
+        try {
+          thumbExists = await window.checkIfThumbnailExists(json.id);
+        } catch {}
+        let previewHtml = '';
+        if (thumbExists) {
+          previewHtml = `<img src="${thumbPath}" alt="${json.name} thumbnail" class="thumb-image" loading="lazy">`;
+        } else {
+          // Live mini preview
+          previewHtml = `<div class="template-preview-mini" id="mini-preview-${json.id}"></div>`;
+          // Also auto-generate a default thumbnail if template-specific is missing
+          setTimeout(() => {
+            const container = document.getElementById(`mini-preview-${json.id}`);
+            if (container) {
+              let html = '';
+              if (Array.isArray(json.sections)) {
+                json.sections.forEach((section, idx) => {
+                  html += window.renderSection ? window.renderSection(section, idx) : '';
+                });
+              }
+              container.innerHTML = html;
+              window.generateThumbnail(json.id, container).then(() => {
+                // Optionally, reload the card to show the new thumbnail
+                // location.reload();
+              });
+            }
+          }, 0);
+        }
+        card.innerHTML = `
+          ${previewHtml}
+          <div class="name">${json.name}</div>
+          <div class="desc">${json.description}</div>
+          <div class="badge ${json.price > 0 ? 'paid' : 'free'}">${json.price > 0 ? 'Premium' : 'Free'}</div>
+          <div class="actions">
+            <a class="button" href="template.html?id=${json.id}">Preview</a>
+            <button onclick="goToEditorWithTemplate('${json.id}');" ${json.price > 0 ? 'disabled' : ''}>Use Template</button>
+            ${json.price > 0 ? `<a class="button" href="/checkout.html?id=${json.id}">Unlock Template</a>` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+        // If no thumbnail, render live preview and auto-generate thumbnail
+        if (!thumbExists) {
+          setTimeout(() => renderMiniPreview(json), 0);
+        }
+      }
+    }
+
+    // Render mini preview using editor's renderSection logic
+    function renderMiniPreview(templateJson) {
+      const container = document.getElementById(`mini-preview-${templateJson.id}`);
+      if (!container) return;
+      // Use editor's renderSection for each section
+      let html = '';
+      if (Array.isArray(templateJson.sections)) {
+        templateJson.sections.forEach((section, idx) => {
+          html += window.renderSection ? window.renderSection(section, idx) : '';
+        });
+      }
+      container.innerHTML = html;
+      // After rendering, generate thumbnail if not present
+      window.generateThumbnail(templateJson.id, container).then(() => {
+        // Optionally, reload the card to show the new thumbnail
+        // location.reload();
+      });
+    }
+
+    fetchTemplates();
+    function goToEditorWithTemplate(id) {
+      window.location.href = `/editor/editor.html?template=${encodeURIComponent(id)}`;
+    }
+  </script>
+</body>
+</html>

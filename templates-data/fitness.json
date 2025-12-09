@@ -1,0 +1,19 @@
+{
+  "id": "fitness",
+  "name": "Fitness Template",
+  "description": "Energetic fitness site with class schedule and trainer profiles.",
+  "category": "Health & Fitness",
+  "price": 15,
+  "thumbnail": "/assets/templates/fitness-thumb.jpg",
+  "preview": "/assets/templates/fitness-preview.jpg",
+  "features": [
+    "Class schedule",
+    "Trainer profiles",
+    "Signup form"
+  ],
+  "sections": [
+    { "type": "hero", "data": { "title": "Get Fit Today", "subtitle": "Join our classes", "imageUrl": "/assets/templates/fitness-preview.jpg" } },
+    { "type": "features", "data": { "title": "Our Trainers", "items": ["John", "Sara"] } },
+    { "type": "footer", "data": { "text": "Call: 555-FITNESS" } }
+  ]
+}

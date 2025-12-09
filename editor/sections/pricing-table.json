@@ -1,0 +1,8 @@
+{
+  "type": "pricing-table",
+  "plans": [
+    { "name": "Basic", "price": "$9/mo", "features": ["Feature A", "Feature B"] },
+    { "name": "Pro", "price": "$29/mo", "features": ["Feature A", "Feature B", "Feature C"] },
+    { "name": "Enterprise", "price": "$99/mo", "features": ["All Features"] }
+  ]
+}

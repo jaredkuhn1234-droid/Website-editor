@@ -1,0 +1,8 @@
+{
+  "type": "testimonials",
+  "testimonials": [
+    { "name": "Alice", "text": "This is amazing!" },
+    { "name": "Bob", "text": "I love this product." },
+    { "name": "Charlie", "text": "Highly recommended." }
+  ]
+}
