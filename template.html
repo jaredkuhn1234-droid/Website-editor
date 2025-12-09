@@ -112,8 +112,8 @@
       });
     }
     function useTemplate(id) {
-      if (window.loadTemplate) { window.loadTemplate(id); }
-      else { alert('Editor integration not loaded.'); }
+      // Open the visual editor with this template pre-loaded
+      window.location.href = `/editor/editor.html?template=${encodeURIComponent(id)}`;
     }
   </script>
 </body>
