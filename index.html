@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Builder Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header" id="home">
+        <div class="container header-content">
+            <div class="brand">Builder</div>
+            <nav class="nav">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="/templates.html" class="nav-link">Templates Marketplace</a>
+                <a href="/app/login.html" class="nav-link">Login</a>
+            </nav>
+            <a class="nav-cta" href="/app/signup.html">Get Started</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow">No-bloat builder</p>
+                    <h1 id="hero-title">Build Beautiful Websites With Full Control</h1>
+                    <p class="subtitle">A modern, simple, no-bloat website builder.</p>
+                    <div class="hero-actions">
+                        <a class="btn primary" href="#pricing">Get Started</a>
+                        <a class="btn ghost" href="#features">See Features</a>
+                    </div>
+                </div>
+                <div class="hero-card" aria-hidden="true">
+                    <div class="hero-card__header">Live Preview</div>
+                    <div class="hero-card__body">
+                        <div class="placeholder-block"></div>
+                        <div class="placeholder-block short"></div>
+                        <div class="placeholder-row">
+                            <div class="placeholder-chip"></div>
+                            <div class="placeholder-chip"></div>
+                            <div class="placeholder-chip"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features" aria-labelledby="features-title">
+            <div class="container section-header">
+                <p class="eyebrow">Why choose us</p>
+                <h2 id="features-title">Build fast without giving up control</h2>
+                <p class="section-subtitle">Design freely, publish instantly, and keep your workflow simple.</p>
+            </div>
+            <div class="container cards-grid">
+                <article class="card">
+                    <h3>Full Manual Control</h3>
+                    <p>Fine-tune layouts, components, and interactions without fighting the tool.</p>
+                </article>
+                <article class="card">
+                    <h3>Clean Modern Templates</h3>
+                    <p>Start from refined, modern templates that keep pages light and fast.</p>
+                </article>
+                <article class="card">
+                    <h3>Easy Drag-and-Drop Editing</h3>
+                    <p>Arrange sections visually while keeping markup clean and maintainable.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+            <div class="container section-header">
+                <p class="eyebrow">Straightforward plans</p>
+                <h2 id="pricing-title">Pricing that grows with you</h2>
+            </div>
+            <div class="container pricing-grid">
+                <article class="card pricing-card">
+                    <div class="pricing-top">
+                        <h3>Free</h3>
+                        <p class="price">$0<span>/mo</span></p>
+                    </div>
+                    <ul class="pricing-list">
+                        <li>Basic templates</li>
+                        <li>Drag-and-drop editor</li>
+                        <li>Publish to builder subdomain</li>
+                    </ul>
+                    <a class="btn secondary" href="#login">Start Free</a>
+                </article>
+
+                <article class="card pricing-card highlight">
+                    <div class="pricing-top">
+                        <h3>Pro</h3>
+                        <p class="price">$29<span>/mo</span></p>
+                        <p class="badge">Most popular</p>
+                    </div>
+                    <ul class="pricing-list">
+                        <li>All Free features</li>
+                        <li>Custom domains</li>
+                        <li>Team collaboration</li>
+                        <li>Advanced components</li>
+                    </ul>
+                    <a class="btn primary" href="#login">Go Pro</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="login" id="login" aria-labelledby="login-title">
+            <div class="container login-card">
+                <div>
+                    <p class="eyebrow">Ready to start?</p>
+                    <h2 id="login-title">Log in or create an account</h2>
+                    <p class="section-subtitle">Access your dashboard to keep building.</p>
+                </div>
+                <a class="btn primary" href="/app/login.html">Log In</a>
